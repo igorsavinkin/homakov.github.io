@@ -87,8 +87,6 @@ lookup_hustler = function(name){
   return hustlers[num-1];
 }
 
-
-
 bounties.push({
   name: "Ebay",
   url: 'http://pages.ebay.com/securitycenter/ResearchersAcknowledgement.html',
@@ -141,7 +139,6 @@ bounties.push({
   }
 })
 
-
 bounties.push({
   name: "Adobe",
   url: 'http://www.adobe.com/support/security/bulletins/securityacknowledgments.html',
@@ -158,13 +155,10 @@ bounties.push({
   }
 })
 
-
 bounties.push({
   name: "AT&T",
   url: 'http://developer.att.com/developer/apiDetailPage.jsp?passedItemId=13400790',
   cb: function(r, id){
-
-
     var res;
     var reg  = />(.*?)<\/td>\s*<td class="last/g
     var html = /</;
@@ -176,14 +170,10 @@ bounties.push({
   }
 })
 
-
-
 bounties.push({
   name: "Barracuda",
   url: 'http://barracudalabs.com/research-resources/bug-bounty-program/bug-bounty-hall-of-fame/',
   cb: function(r, id){
-
-
     var res;
     var reg  = /<td>(.*?)<\/td>\s*<\/tr/g
     while ((res = reg.exec(r)) !== null){
@@ -193,8 +183,6 @@ bounties.push({
     }
   }
 })
-
-
 
 bounties.push({
   name: "Coinbase",
@@ -210,7 +198,6 @@ bounties.push({
   }
 })
 
-
 bounties.push({
   name: "Dropbox",
   url: 'https://www.dropbox.com/special_thanks',
@@ -224,7 +211,6 @@ bounties.push({
     }
   }
 })
-
 
 bounties.push({
   name: "Gitlab",
@@ -314,6 +300,7 @@ bounties.push({
     }
   }
 })
+
 bounties.push({
   name: "Apple",
   url: 'http://support.apple.com/kb/HT1318',
@@ -339,7 +326,6 @@ bounties.push({
     }
   }
 })
-
 
 bounties.push({
   name: "Microsoft",
@@ -368,10 +354,6 @@ bounties.push({
   }
 })
 
-
-
-
-
 bounties.push({
   name: "Shopify",
   url: 'https://www.shopify.com/security-response',
@@ -386,6 +368,18 @@ bounties.push({
   }
 })
 
+bounties.push({
+  name: "Stack Exchange",
+  url: 'http://stackexchange.com/about/security',
+  cb: function(r, id){
+    var res;
+    var reg = /<td>[0-9\-]+<\/td><\/td><td>([^<]+)<\/td>/g;
+    while ((res = reg.exec(r)) !== null) {
+      h = lookup_hustler(res[1]);
+      upgrade_hustler(h, id);
+    }
+  }
+});
 
 bounties.push({
   name: "Facebook",
@@ -415,6 +409,7 @@ bounties.push({
     }
   }
 })
+
 bounties.push({
   name: "Red hat",
   url: 'https://access.redhat.com/site/articles/66234',
@@ -450,9 +445,6 @@ bounties.push({
   }
 })
 
-
-
-
 bounties.push({
   name: "Etsy",
   url: 'http://www.etsy.com/help/article/2463',
@@ -467,7 +459,6 @@ bounties.push({
   }
 })
 
-
 bounties.push({
   name: "PayPal",
   url: 'https://www.paypal.com/webapps/mpp/security-tools/wall-of-fame-honorable-mention',
@@ -481,22 +472,19 @@ bounties.push({
   }
 })
 
-
 var requested = bounties.length;
 var result = '';
 var aggr = [];
-for(id=0,l=bounties.length;id<l;id++){
-
-  var callback = (function(cb,id) {
-    return function(err,res) {
+for (id = 0, l = bounties.length; id < l; id++) {
+  var callback = (function(cb, id) {
+    return function(err, res) {
       if (err) throw err;
-      cb(res,id);
-
+      cb(res, id);
       aggr.push("<a href='"+bounties[id].url+"'>"+bounties[id].name+' ('+bounties[id].found+')</a>');
-      console.log(bounties[id].name, 'found', bounties[id].found)
-      if(--requested == 0) done();
+      console.log(bounties[id].name, 'found', bounties[id].found);
+      if (--requested == 0) done();
     }
-    })(bounties[id].cb,id)
+    })(bounties[id].cb, id)
 
   //transport = get //bounties[id].url[4] == 's' ? https : http;
   get(bounties[id].url).asString(callback);
