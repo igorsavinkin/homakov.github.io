@@ -294,7 +294,7 @@ bounties.push({
   url: 'http://company.yandex.com/security/hall-of-fame.xml',
   cb: function(r, id){
     var res;
-    var reg  = /<tr><td class="b-research__t-td">\s*<p>\s*(.*?)<\/p>/g;
+    var reg  = /<tr>\s*<td class="b-research__t-td">\s*<p>\s*(.*?)<\/p>/g; // to detect new line b/w <tr> & <td * >.. & get all listing perfectly.
     while ((res = reg.exec(r)) !== null){
       h = lookup_hustler(res[1]);
       upgrade_hustler(h,id);
