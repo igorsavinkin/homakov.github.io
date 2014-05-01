@@ -1,7 +1,17 @@
 
 
-<p>Input</p>
+<p>URI encode</p>
 
-<p><textarea rows="10" cols="80" onkeypress="enc_output.value=encodeURIComponent(this.value);" id="enc_input" placeholder="Type here to encode.."></textarea></p>
+<p>
+<textarea rows="10" cols="80" onchange="enc_output.value=encodeURIComponent(this.value);" id="enc_input" placeholder="Type here to encode"></textarea>
+<textarea rows="10" cols="80" onchange="enc_input.value=decodeURIComponent(this.value);"  id="enc_output"></textarea>
+</p>
 
-<p><textarea rows="10" cols="80" id="enc_output"></textarea></p>
+
+
+<p>Base64 encode</p>
+
+<p>
+<textarea rows="10" cols="80" onchange="base_output.value=btoa(this.value);" id="base_input" placeholder="Type here to encode"></textarea>
+<textarea rows="10" cols="80" onchange="base_input.value=atob(this.value);"  id="base_output"></textarea>
+</p>
