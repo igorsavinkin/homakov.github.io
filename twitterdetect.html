@@ -2,7 +2,7 @@ Take any tweet id (.../username/status/<b>482142996411207680</b>) <input id="twe
 <input type=submit value="Did I retweet it?" onclick=run('retweet')>
 <input type=submit value="Did I favorite it?" onclick=run('favorite')>
 <br>
-Is it useful to detect current user? Yes, when we have a small group of people having favorites/retweets in common (we need to analyze their entire timeline to get better results). Let's start with some most popular tweets, if any of them worked let's reduce our target group to those who could retweet/favorite that tweet, and show the user a tweet that can distinguish them from other favoriters. Maths.
+Is it useful to detect current user? Yes, when we have a small group of people having favorites/retweets in common (we need to analyze their entire timeline to get better results). <br>We start with the most popular tweets (world cup, oscar, jokes, etc), if any of them worked now current user is in the target group of people who retweeted/favorited the tweet we checked. Next we keep showing the user tweets that can distinguish him from others. Maths.
 
 <script>
 function run(type){
