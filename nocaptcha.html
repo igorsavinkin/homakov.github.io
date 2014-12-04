@@ -3,7 +3,17 @@
 <script type='text/javascript' src='https://www.google.com/recaptcha/api.js?ver=2'></script>
 
 
+<script>
 
+check = setInterval(function(){
+  v=document.getElementById('g-recaptcha-response').value
+  if(v.length>0){
+    alert('Your token is '+v);
+    clearInterval(check);
+  }
+},400)
+
+</script>
 
 
 
