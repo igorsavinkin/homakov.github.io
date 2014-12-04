@@ -3,18 +3,6 @@
 <script type='text/javascript' src='https://www.google.com/recaptcha/api.js?ver=2'></script>
 
 
-<script>
-
-check = setInterval(function(){
-  v=document.getElementById('g-recaptcha-response').value
-  if(v.length>0){
-    alert('Your token is '+v);
-    clearInterval(check);
-  }
-},400)
-
-</script>
-
 
 
 
@@ -148,3 +136,31 @@ check = setInterval(function(){
 
         <p class="submit"><input type="submit" class="button" name="Submit" value="Register" /></p>
       </form>
+
+
+
+<script>
+function makeid()
+{
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for( var i=0; i < 5; i++ )
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+}
+user_login.value='BOT-'+makeid();
+user_email.value='BOT-'+makeid()+'@gmail.com';
+user_login.value='BOT-'+makeid();
+
+check = setInterval(function(){
+  v=document.getElementById('g-recaptcha-response').value
+  if(v.length>0){
+    alert('Thanks for helping the bots! Your token is '+v);
+    document.forms[0].submit();
+    clearInterval(check);
+  }
+},400)
+
+</script>
