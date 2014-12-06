@@ -1,0 +1,69 @@
+
+<script>
+var stack = {}
+var lastPress = 0
+var lastChar = false
+//window.onkeyup = function(e){
+//  console.log(String.fromCharCode(e.keyCode),performance.now()-lastPress)
+//}
+
+window.onkeydown = function(e){
+  var evt = e || window.event;
+  var charCode = evt.which || evt.keyCode;
+  var charStr = (charCode);
+  //lastPress=performance.now();
+  //return true;
+  
+  delta = e.timeStamp - lastPress;
+
+  if(delta > 5000){
+    console.log('too long delta')
+  }else{
+    if(lastChar){
+      var handle = lastChar + '_' + charStr;
+
+      if(!stack[handle]){stack[handle] = []}
+
+      stack[handle].push(delta)
+
+    }
+  }
+  lastPress = e.timeStamp;
+  lastChar = charStr;
+}
+
+function makeStats(){
+  result = ''
+  var sortable = []
+
+  for(pair in stack){
+    var sum = eval(stack[pair].join('+'));
+    avg = sum / stack[pair].length;
+    sortable.push([pair, avg]);
+
+
+  }
+
+  sortable.sort(function(a, b) {return a[1] - b[1]})
+  for(i in sortable){
+    handle = sortable[i][0]
+    chars = handle.split('_')
+    
+    result+=handle+" ("+String.fromCharCode(chars[0])+String.fromCharCode(chars[1])+") "+sortable[i][1]+' <br>';
+
+  }
+
+
+  document.getElementById('stats').innerHTML=result
+
+}
+
+</script>
+
+<textarea cols=40 rows=10></textarea><br>
+<button onclick=makeStats()>Stats</button>
+The pairs trade or pair trading is a market neutral trading strategy enabling traders to profit from virtually any market conditions: uptrend, downtrend, or sideways movement. This strategy is categorized as a statistical arbitrage and convergence trading strategy.[1] The pair trading was pioneered by Gerry Bamberger and later led by Nunzio Tartaglia’s quantitative group at Morgan Stanley in the 1980s.[2]
+The strategy monitors performance of two historically correlated securities. When the correlation between the two securities temporarily weakens, i.e. one stock moves up while the other moves down, the pairs trade would be to short the outperforming stock and to long the underperforming one, betting that the "spread" between the two would eventually converge.[3] The divergence within a pair can be caused by temporary supply/demand changes, large buy/sell orders for one security, reaction for important news about one of the companies, and so on.
+
+
+<div id="stats"></div>
