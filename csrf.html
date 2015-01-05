@@ -1,0 +1,242 @@
+<a href=//egorhomakov.com>Egor Homakov</a> | Stuff: <a href="4sqlet.html">4sq app</a>
+<a href="redmine.html">Redmine JS leaking</a> 
+<a href="anysquare.html">Clickjacking extractor</a> 
+<a href="stealpass.html">Steal pass with XSS demo</a> 
+<hr>
+<table><tr><td valign=top width="400px">
+CSRF Tool (<a href="http://homakov.blogspot.ru/2013/05/csrf-tool.html">How it works</a>). Also check out <a href="/replay.html">Replay tool</a><br>
+
+<input onclick="switch_auto()" type="checkbox" id="c1"><label for="c1">Auto-submit</label>
+<input onclick="switch_base()" type="checkbox" id="c2"><label for="c2">Base64 URL</label>
+<textarea rows="6" cols="100" id="curl">curl 'http://egorhomakov.com' --data 'x=1'</textarea>
+
+<div id="form"></div>
+<div id="tabs"></div>
+
+</td>
+<td>
+<iframe id="postme" seamless style="width:600px;height:500px;" src="data:,target iframe"></iframe>
+</td>
+</tr></table>
+
+<script>
+var match_re = '(?:\'|")([^"\']+)(?:\'|")';
+var url_re = new RegExp('curl '+match_re);
+var headers_re = new RegExp('-H '+match_re);
+var data_re = new RegExp('--data '+match_re);
+var form_obj = {};
+var base_enc = false;
+
+function parse_data(data){
+  var res = {};
+  var vars = data.split('&');
+  for (var i = 0; i < vars.length; i++) {
+    if(vars[i].length){
+      var pair = vars[i].split('=');
+      res[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
+    }
+  }
+  return res;
+}
+
+function dump_data(data){
+  var res = '';
+  for(var k in data){
+    res += encodeURIComponent(k)+'='+encodeURIComponent(data[k])+'&';
+  }
+  return res;
+}
+
+function submit_to(to){
+  genform.target = to;
+  //genform.submit();
+  //return false;
+}
+
+function no_ref(){
+  /*
+  data: urls omit referers, i have a blogpost on this
+  */
+  location = 'data:text/html,'+get_html();
+}
+
+function switch_method(){
+  var swap = (form_obj.method == 'GET') ? 'POST' : 'GET'
+  form_obj.method = swap;
+  update_form();
+}
+
+function switch_url(url){
+  form_obj.url = url;
+  update_form();
+}
+
+function switch_auto(){
+  form_obj.autosubmit = !form_obj.autosubmit;
+  update_form();
+}
+
+function switch_base(){
+  base_enc = !base_enc;
+  dump_hash();
+}
+
+function save_tab(){
+  localStorage[form_obj.url] = location.hash;
+  load_tabs();
+}
+
+function load_tabs(){
+  var html = '';
+  for(var name in localStorage){
+    html += "<a href='"+localStorage[name]+"'>"+name+"</a> <a href=\"javascript:delete localStorage['"+name+"'];load_tabs();\">[X]</a><br>"
+  }
+  document.getElementById('tabs').innerHTML = html;
+}
+
+function get_inputs(){
+  return genform.getElementsByTagName('input');
+}
+
+function get_html(){
+  return generate_form(form_obj, false)+'<script>genform.submit()<'+'/script>';
+}
+
+function generate_form(obj, visible){
+  var inputs = '';
+  if(obj.data){
+    var pairs = parse_data(obj.data);
+
+    for(var k in pairs){
+      if(k=='') continue;
+      if(visible){
+        inputs += '<tr><td>'+esc(k)+' </td><td><input onchange="update_fields();" size=100 name="'+esc(k)+'" value="'+esc(pairs[k])+'"><a href="javascript:void(0)" onclick="this.parentNode.parentNode.remove();update_fields();">x</a></td></tr>';
+      }else{
+        inputs += esc(k)+' <input type="text" name="'+esc(k)+'" value="'+esc(pairs[k])+'"><br>';
+      }
+    }
+    if(visible){
+      inputs = '<table>'+inputs+'</table>';
+    }
+  }
+  var outform = '<form id="genform" action="'+esc(obj.url)+'" method="'+obj.method+'">'+inputs+'<input name="sbmbtn" type="submit"></form>';
+  
+  if(visible){
+    var out = '<a id="cur_method" title="Switch?" href="javascript:switch_method()">'+obj.method+'</a> <input size=100 value="'+esc(obj.url)+'" onchange="switch_url(this.value);"><br>';
+    out += '<input type="submit" onclick="return submit_to(\'_blank\')" value="New window"><input type="submit" onclick="return submit_to(\'_top\')" value="This window"><input type="submit" onclick="return submit_to(\'postme\')" value="Iframe"><input type="submit" onclick="return no_ref();" value="No Referrer"> | <input type="submit" value="HTML" onclick="postme.location=(\'data:,\'+get_html())"> <input type="submit" onclick="save_tab()" value="Save">';
+    out += '<div><input id="new_name" placeholder="name"> = <input id="new_value" placeholder="value"> <a href="javascript:update_fields(1);">add<a></div>';
+
+    out += '<div>'+outform+'</div>';
+
+    out = '<div class="yelo">'+out+'</div>';
+    return out;
+  }else{
+    // hidden form
+    return outform;
+  }
+}
+
+var HTML = {
+  chars: {
+    '&':'&amp;',
+    '<':'&lt;',
+    '>':'&gt;',
+    '"':'&quot;',
+    "'":'&#039;'    
+  },
+  escape: function(i){
+    return i.replace(HTML.re, function(m){
+      return HTML.chars[m];
+    })
+  }
+}
+HTML.re = new RegExp("("+Object.keys(HTML.chars).join('|')+')','g');
+var esc = HTML.escape;
+
+function parse_curl(){
+  var input = curl.value;
+  form_obj ={
+    url: input.match(url_re)[1],
+    autosubmit: false,
+    target: '_top'
+  }
+
+  if(data = input.match(data_re)){
+    form_obj.data = data[1];
+    form_obj.method = 'POST';
+  }else{
+    form_obj.method = 'GET';
+  }
+
+  update_form();
+}
+
+function dump_hash(){
+  var str = JSON.stringify(form_obj);
+  location.hash = base_enc ? btoa(str) : str;
+}
+
+function update_fields(new_pair){
+  var inputs = get_inputs();
+  var vals = {}
+  for(var k = 0; k<inputs.length;k++){
+    vals[inputs[k].name] = inputs[k].value;
+  }
+  if(new_pair) vals[new_name.value] = new_value.value;
+
+  form_obj.data = dump_data(vals);
+  update_form();
+}
+
+function update_form(){
+  form.innerHTML = generate_form(form_obj, true);
+
+  new_value.onkeydown=function(event){
+    if(event.keyCode == 13) {
+        update_fields(1);
+    }
+  }
+
+  dump_hash();
+}
+
+load_hash = function(){
+  if(location.hash){
+    //lets load CSRF template
+    curl.value = '';
+    var str = location.hash.substr(1);
+    if(str[0]!='{'){
+      base_enc = true;
+      str = atob(str);
+      c2.checked = true;
+    }
+    form_obj = JSON.parse(str);
+
+    if(form_obj.url.substr(0,4) != 'http') form_obj.url = 'http://yo.yo';
+    if(['POST','GET'].indexOf(form_obj.method) == -1) form_obj.method = 'POST';
+
+    // if autosubmit it should be hidden i guess
+    form.innerHTML = generate_form(form_obj, !form_obj.autosubmit);
+    if(form_obj.autosubmit){
+      c1.checked = true;
+      submit_to(form_obj.target);
+    }
+  }else{
+    //demo
+    parse_curl();
+  }
+  load_tabs();
+}
+
+window.onload = load_hash; 
+curl.onchange = parse_curl;
+onhashchange = load_hash;
+</script>
+
+<style>
+.yelo{
+  background-color: yellow;
+}
+</style>
+
+

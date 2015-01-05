@@ -1,242 +1,176 @@
-<a href=//egorhomakov.com>Egor Homakov</a> | Stuff: <a href="4sqlet.html">4sq app</a>
-<a href="redmine.html">Redmine JS leaking</a> 
-<a href="anysquare.html">Clickjacking extractor</a> 
-<a href="stealpass.html">Steal pass with XSS demo</a> 
-<hr>
-<table><tr><td valign=top width="400px">
-CSRF Tool (<a href="http://homakov.blogspot.ru/2013/05/csrf-tool.html">How it works</a>). Also check out <a href="/replay.html">Replay tool</a><br>
+<!DOCTYPE html>
+<html>
 
-<input onclick="switch_auto()" type="checkbox" id="c1"><label for="c1">Auto-submit</label>
-<input onclick="switch_base()" type="checkbox" id="c2"><label for="c2">Base64 URL</label>
-<textarea rows="6" cols="100" id="curl">curl 'http://egorhomakov.com' --data 'x=1'</textarea>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Securecanvas : sc">
 
-<div id="form"></div>
-<div id="tabs"></div>
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
-</td>
-<td>
-<iframe id="postme" seamless style="width:600px;height:500px;" src="data:,target iframe"></iframe>
-</td>
-</tr></table>
+    <title>SecureCanvas</title>
+  </head>
 
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+
+          <h1 id="project_title">SecureCanvas</h1>
+          <h2 id="project_tagline">The first ever whitelist based protection.<br>We're looking for investors!</h2>
+
+          <div style="position:absolute;right:100px;top:70px;width:92px;height:130px;background-size:92px 130px;background-image:url('./logo2.png')"></div>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+
+<p>Quick intro: I'm <a href="http://homakov.blogspot.com">Egor Homakov</a> and my day job is security consulting at <a href="http://sakurity.com">Sakurity</a>.</p>
+
+        <h3>
+<a id="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages" aria-hidden="true"><span class="octicon octicon-link"></span></a>What do vulnerabilities have in common?</h3>
+
+<p>To detect and stop malicious web attacks you need to look for a lot of different activities.  The one thing all attacks have in common though is they all look <strong>different</strong> from what normal users send.</p>
+<p>For example, users are not supposed to:</p>
+<ul>
+<li>Manually type URL. It should be changed by the app.</li>
+<li>Tamper HTTP headers and/or post body. </li>
+<li>Set <tt>User-Agent: () { :;}; /bin/bash -c "whoami"</tt></li>
+<li>Read the source code.</li>
+<li>Change hidden inputs and other kinds of tampering.</li>
+</ul>
+<p>No matter how often fancy promotional material says "machine learning", it will use <strong>a blacklist approach</strong>. Blacklists are known to be futile.  Having to figure out ways to detect and block every action an attacker will perform is not effective.  We need a new model.</p>
+
+ 
+
+<p>We are going to create interface-based whitelist (what you see is all you can do). Users are supposed to <strong>type, scroll and click</strong> and this is the only thing SecureCanvas will allow them to do.  This reduces the attack surface to absolute zero. Even the most vulnerable apps written by the most careless developer will become unhackable if its interface doesn't provide a way to hack it.</p>
+ 
+<img src="./diagram.png">
+
+<p>When the user requests http://example.com SecureCanvas loads the real example.com (which can only be accessed by SecureCanvas) in <strong>a virtual lightweight libwebkit-based browser</strong>. The user gets back a special syncronization page containing:</p>
+<ul>
+<li>A fullscreen &lt;canvas&gt; element. (Implementation #1 only)</li>
+<li>Javascript code creating a fast and encrypted websocket connection to SecureCanvas server. This works as a proxy for user events, gets back a Remote Frame Buffer (or HTML snapshots and diffs for Implementation #2).</li>
+<li> Text and links from the original example.com HTML snapshot. This is not visible to the user, but is useful for search engines and crawlers.</li>
+</ul>
+
+
+<h3>Implementation #1: Canvas and Remote Frame Buffer</h3>
+<p>Advantadges:</p>
+<ul>
+  <li>Easy to get started with just Chrome in kiosk mode.</li>
+  <li>You can even switch off copy/paste.</li>
+</ul>
+
+<p>Disadvantadges:</p>
+<ul>
+  <li>Unpleasant network latency. Typing feels slower.</li>
+  <li>Fonts and images look compressed (<a href="./tw.png">see this screenshot</a>)</li>
+  <li>Problems with external widgets depending on cookies.</li>
+</ul>
+
+<h3>Implementation #2: DOM snapshots instead of RFB</h3>
+
+<p>Instead of sending huge compressed PNGs over the wire it is easier to use HTML. SecureCanvas will get DOM diffs and patch current state in the user browser. <a href="https://github.com/Matt-Esch/virtual-dom">virtual-dom</a> and <a href="http://facebook.github.io/react/">React.js by Facebook</a> use a similar approach but for a very different purpose.</p>
+
+<p>Advantadges:</p>
+<ul>
+  <li>Website will look and feel the same.</li>
+  <li>Responsive scrolling and typing.</li>
+  <li>Widgets will keep working.</li>
+</ul>
+
+<h3>Implementation #3: Hot request whitelisting</h3>
+
+<p>For every page the user requests, SecureCanvas creates a virtual twin browser with this page in the cloud. JavaScript code is injected into the page to transmit and replay all user actions in the twin browser. So when your local page sends a request, your twin browser sends a similar request. Once SecureCanvas has two equal requests from both browsers it proves the request is the legitimate result of interaction with the app interface, and the request is proxied to the real example.com server.</p>
+<p>Website's behavior remains exactly the same. No network latency and no problems with 3rd party requests.</p>
+
+
+<h3>URL Guard</h3>
+<p>To prevent URL tampering SecureCanvas will have flexible URL validation system with following security model choices:</p>
+
+<ol type="1">
+<li> Only root is allowed &mdash; perfect for online banks and standalone apps where the user is not supposed to share, nor open, URLs with specific path.</li>
+<li> HMAC-signed URLs (<strong>by default</strong>). For example http://example.com/users?id=homakov will look like http://example.com/users?id=homakov/d9fx49d0189e1759 in the address bar. Without the signature SecureCanvas will not accept it. This will prevent all kinds of access bypasses &mdash; you cannot load /private_info/OTHER_USER_ID without a valid signature for that path.</li>
+<li> Known URLs only. Opening /some_url will be allowed only if the SecureCanvas server previously navigated to that address</li>
+<li> Any URL is allowed. </li>
+</ol>
+<p>It will be possible to skip SecureCanvas for non-browser endpoints such as APIs.</p>
+
+
+
+
+<h4>OWASP Top 10 and other bugs SecureCanvas prevents:</h4>
+<ul>
+<li><a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">A1 Injections (prevents parameters tampering)</a></li>
+<li><a href="https://www.owasp.org/index.php/Top_10_2013-A2-Broken_Authentication_and_Session_Management">A2 Broken Authentication and Session Management</a></li>
+<li><a href="https://www.owasp.org/index.php/Top_10_2013-A3-Cross-Site_Scripting_(XSS)">A3 XSS (prevents parameters tampering)</a></li>
+<li><a href="https://www.owasp.org/index.php/Top_10_2013-A4-Insecure_Direct_Object_References">A4 Insecure Direct Object References</a></li>
+<li><a href="https://www.owasp.org/index.php/Top_10_2013-A5-Security_Misconfiguration">A5 Security Misconfiguration (partially)</a></li>
+<li><a href="https://www.owasp.org/index.php/Top_10_2013-A6-Sensitive_Data_Exposure">A6 Sensitive Data Exposure (partially)</a></li>
+
+<li><a href="https://www.owasp.org/index.php/Top_10_2013-A7-Missing_Function_Level_Access_Control">A7 Missing Function Level Access Control (interface-based access control. You can't do something you can't see and click on.)</a></li>
+
+<li><a href="https://www.owasp.org/index.php/Top_10_2013-A8-Cross-Site_Request_Forgery_(CSRF)">A8 Cross-Site Request Forgery</a></li>
+<li><a href="https://www.owasp.org/index.php/Top_10_2013-A9-Using_Components_with_Known_Vulnerabilities">A9 Using Components with Known Vulnerabilities (makes harder to exploit known vulnerabilities)</a></li>
+<li><a href="https://www.owasp.org/index.php/Top_10_2013-A10-Unvalidated_Redirects_and_Forwards">A10 Unvalidated Redirects and Forwards</a></li>
+
+<li>Heartbleed (real https://example.com is unreachable)</li>
+<li>Shellshock (cannot tamper with headers)</li>
+<li>Rails Remote Code Execution (cannot manually set neither Content-Type nor post body)</li>
+<li>Mass assignment (you cannot add extra inputs nor edit hidden ones)</li>
+<li>Regular expression bypass for Ruby (you cannot replace an input with textarea)</li>
+<li>JSONP or RJS leakings (URL Guard will not accept internal URL)</li>
+<li>Clickjacking / UI redressing (synchronization page has X-Frame-Options:DENY)</li>
+<li><a href="http://oauthsecurity.com">OAuth vulnerabilities</a></li>
+<li>Everything else you can think of!</li>
+</ul>
+
+It doesn't protect you from <strong>bugs that can happen during normal browsing</strong>. However, SecureCanvas will make these significantly harder to exploit:
+<ol type="1">
+<li> Race conditions. You will be able to limit requests per seconds per UserID but some kinds of race conditions can be performed from different accounts, such as redeeming a voucher.</li>
+<li>  DDoS. It might have anti-DDoS protection built-in but the nature of DDoS makes it impossible to prevent completely.</li>
+<li>  Bots. Nobody can stop bots. The best you can do is to make the attack a little bit more expensive for them using hashcash or CAPTCHA. Everything else "that stops bots" is snake oil.</li>
+<li> Bruteforce.</li>
+<li> XSS and SQL injections via text inputs. There will be an option to disallow typing  &lt;&gt;&quot;'.</li>
+<img width="200" src="./sqli.png">
+<img width="200" src="./xss.png">
+</ol>
+<h3>Solutions</h3>
+<p>There will be an Enterprise edition to install on premises for banks and companies with strict security policies. For everyone else there will be PaaS.</p>
+<h1>Fundraising</h1>
+<p>There's no prototype yet. <strong>We're looking for investors to speed this up</strong>.
+</p>
+
+
+
+
+
+
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p>Contact us: <a href="mailto:info@sakurity">info@sakurity.com</a> </p>
+        <p>or shoot a tweet to our team <a href="https://twitter.com/homakov">@homakov</a>, <a href="https://twitter.com/isciurus">@isciurus</a>, <a href="https://twitter.com/paulmillr">@paulmillr</a></p>
+      </footer>
+    </div>
+
+    
 <script>
-var match_re = '(?:\'|")([^"\']+)(?:\'|")';
-var url_re = new RegExp('curl '+match_re);
-var headers_re = new RegExp('-H '+match_re);
-var data_re = new RegExp('--data '+match_re);
-var form_obj = {};
-var base_enc = false;
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-function parse_data(data){
-  var res = {};
-  var vars = data.split('&');
-  for (var i = 0; i < vars.length; i++) {
-    if(vars[i].length){
-      var pair = vars[i].split('=');
-      res[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
-    }
-  }
-  return res;
-}
+  ga('create', 'UA-58212598-1', 'auto');
+  ga('send', 'pageview');
 
-function dump_data(data){
-  var res = '';
-  for(var k in data){
-    res += encodeURIComponent(k)+'='+encodeURIComponent(data[k])+'&';
-  }
-  return res;
-}
-
-function submit_to(to){
-  genform.target = to;
-  //genform.submit();
-  //return false;
-}
-
-function no_ref(){
-  /*
-  data: urls omit referers, i have a blogpost on this
-  */
-  location = 'data:text/html,'+get_html();
-}
-
-function switch_method(){
-  var swap = (form_obj.method == 'GET') ? 'POST' : 'GET'
-  form_obj.method = swap;
-  update_form();
-}
-
-function switch_url(url){
-  form_obj.url = url;
-  update_form();
-}
-
-function switch_auto(){
-  form_obj.autosubmit = !form_obj.autosubmit;
-  update_form();
-}
-
-function switch_base(){
-  base_enc = !base_enc;
-  dump_hash();
-}
-
-function save_tab(){
-  localStorage[form_obj.url] = location.hash;
-  load_tabs();
-}
-
-function load_tabs(){
-  var html = '';
-  for(var name in localStorage){
-    html += "<a href='"+localStorage[name]+"'>"+name+"</a> <a href=\"javascript:delete localStorage['"+name+"'];load_tabs();\">[X]</a><br>"
-  }
-  document.getElementById('tabs').innerHTML = html;
-}
-
-function get_inputs(){
-  return genform.getElementsByTagName('input');
-}
-
-function get_html(){
-  return generate_form(form_obj, false)+'<script>genform.submit()<'+'/script>';
-}
-
-function generate_form(obj, visible){
-  var inputs = '';
-  if(obj.data){
-    var pairs = parse_data(obj.data);
-
-    for(var k in pairs){
-      if(k=='') continue;
-      if(visible){
-        inputs += '<tr><td>'+esc(k)+' </td><td><input onchange="update_fields();" size=100 name="'+esc(k)+'" value="'+esc(pairs[k])+'"><a href="javascript:void(0)" onclick="this.parentNode.parentNode.remove();update_fields();">x</a></td></tr>';
-      }else{
-        inputs += esc(k)+' <input type="text" name="'+esc(k)+'" value="'+esc(pairs[k])+'"><br>';
-      }
-    }
-    if(visible){
-      inputs = '<table>'+inputs+'</table>';
-    }
-  }
-  var outform = '<form id="genform" action="'+esc(obj.url)+'" method="'+obj.method+'">'+inputs+'<input name="sbmbtn" type="submit"></form>';
-  
-  if(visible){
-    var out = '<a id="cur_method" title="Switch?" href="javascript:switch_method()">'+obj.method+'</a> <input size=100 value="'+esc(obj.url)+'" onchange="switch_url(this.value);"><br>';
-    out += '<input type="submit" onclick="return submit_to(\'_blank\')" value="New window"><input type="submit" onclick="return submit_to(\'_top\')" value="This window"><input type="submit" onclick="return submit_to(\'postme\')" value="Iframe"><input type="submit" onclick="return no_ref();" value="No Referrer"> | <input type="submit" value="HTML" onclick="postme.location=(\'data:,\'+get_html())"> <input type="submit" onclick="save_tab()" value="Save">';
-    out += '<div><input id="new_name" placeholder="name"> = <input id="new_value" placeholder="value"> <a href="javascript:update_fields(1);">add<a></div>';
-
-    out += '<div>'+outform+'</div>';
-
-    out = '<div class="yelo">'+out+'</div>';
-    return out;
-  }else{
-    // hidden form
-    return outform;
-  }
-}
-
-var HTML = {
-  chars: {
-    '&':'&amp;',
-    '<':'&lt;',
-    '>':'&gt;',
-    '"':'&quot;',
-    "'":'&#039;'    
-  },
-  escape: function(i){
-    return i.replace(HTML.re, function(m){
-      return HTML.chars[m];
-    })
-  }
-}
-HTML.re = new RegExp("("+Object.keys(HTML.chars).join('|')+')','g');
-var esc = HTML.escape;
-
-function parse_curl(){
-  var input = curl.value;
-  form_obj ={
-    url: input.match(url_re)[1],
-    autosubmit: false,
-    target: '_top'
-  }
-
-  if(data = input.match(data_re)){
-    form_obj.data = data[1];
-    form_obj.method = 'POST';
-  }else{
-    form_obj.method = 'GET';
-  }
-
-  update_form();
-}
-
-function dump_hash(){
-  var str = JSON.stringify(form_obj);
-  location.hash = base_enc ? btoa(str) : str;
-}
-
-function update_fields(new_pair){
-  var inputs = get_inputs();
-  var vals = {}
-  for(var k = 0; k<inputs.length;k++){
-    vals[inputs[k].name] = inputs[k].value;
-  }
-  if(new_pair) vals[new_name.value] = new_value.value;
-
-  form_obj.data = dump_data(vals);
-  update_form();
-}
-
-function update_form(){
-  form.innerHTML = generate_form(form_obj, true);
-
-  new_value.onkeydown=function(event){
-    if(event.keyCode == 13) {
-        update_fields(1);
-    }
-  }
-
-  dump_hash();
-}
-
-load_hash = function(){
-  if(location.hash){
-    //lets load CSRF template
-    curl.value = '';
-    var str = location.hash.substr(1);
-    if(str[0]!='{'){
-      base_enc = true;
-      str = atob(str);
-      c2.checked = true;
-    }
-    form_obj = JSON.parse(str);
-
-    if(form_obj.url.substr(0,4) != 'http') form_obj.url = 'http://yo.yo';
-    if(['POST','GET'].indexOf(form_obj.method) == -1) form_obj.method = 'POST';
-
-    // if autosubmit it should be hidden i guess
-    form.innerHTML = generate_form(form_obj, !form_obj.autosubmit);
-    if(form_obj.autosubmit){
-      c1.checked = true;
-      submit_to(form_obj.target);
-    }
-  }else{
-    //demo
-    parse_curl();
-  }
-  load_tabs();
-}
-
-window.onload = load_hash; 
-curl.onchange = parse_curl;
-onhashchange = load_hash;
 </script>
-
-<style>
-.yelo{
-  background-color: yellow;
-}
-</style>
-
-
+  </body>
+</html>
