@@ -10,10 +10,5 @@ function phish(){
 }
 
 window.onload=function(){
-<<<<<<< HEAD
 	lk.onclick = phish;
 }
-=======
-  lk.onclick = phish;
-}
->>>>>>> 095d322862f9452ae426c21c8819956f4d284494

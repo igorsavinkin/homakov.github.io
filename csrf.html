@@ -1,8 +1,3 @@
-<a href=//egorhomakov.com>Egor Homakov</a> | Stuff: <a href="4sqlet.html">4sq app</a>
-<a href="redmine.html">Redmine JS leaking</a> 
-<a href="anysquare.html">Clickjacking extractor</a> 
-<a href="stealpass.html">Steal pass with XSS demo</a> 
-<hr>
 <table><tr><td valign=top width="400px">
 CSRF Tool (<a href="http://homakov.blogspot.ru/2013/05/csrf-tool.html">How it works</a>). Also check out <a href="/replay.html">Replay tool</a><br>
 
@@ -119,7 +114,7 @@ function generate_form(obj, visible){
       inputs = '<table>'+inputs+'</table>';
     }
   }
-  var outform = '<form id="genform" action="'+esc(obj.url)+'" method="'+obj.method+'">'+inputs+'<input name="sbmbtn" type="submit"></form>';
+  var outform = '<form id="genform" action="'+esc(obj.url)+'" method="'+obj.method+'">'+inputs+'<input type="submit"></form>';
   
   if(visible){
     var out = '<a id="cur_method" title="Switch?" href="javascript:switch_method()">'+obj.method+'</a> <input size=100 value="'+esc(obj.url)+'" onchange="switch_url(this.value);"><br>';
