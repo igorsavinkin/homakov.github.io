@@ -1,5 +1,5 @@
 <table><tr><td valign=top width="400px">
-CSRF Tool new(<a href="http://homakov.blogspot.ru/2013/05/csrf-tool.html">How it works</a>). Also check out <a href="/replay.html">Replay tool</a><br>
+CSRF Tool (<a href="http://homakov.blogspot.ru/2013/05/csrf-tool.html">How it works</a>). Also check out <a href="/replay.html">Replay tool</a><br>
 
 <input onclick="switch_auto()" type="checkbox" id="c1"><label for="c1">Auto-submit</label>
 <input onclick="switch_base()" type="checkbox" id="c2"><label for="c2">Base64 URL</label>
@@ -230,8 +230,7 @@ onhashchange = load_hash;
 
 <style>
 .yelo{
-  background-color: green;
-  background-color: green;
+  background-color: yellow;
 }
 </style>
 
