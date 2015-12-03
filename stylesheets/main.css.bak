@@ -1,0 +1,426 @@
+body {
+    background: #fff;
+    font-family: "Roboto",Helvetica,Arial,sans-serif;
+    color: #364354;
+    min-width: 320px;
+}
+h1,
+h2,
+h3,
+h5,
+h6 {
+    font-weight: 200;
+    color: #e64464;
+}
+h1 { font-size: 64px;  }
+h2 { font-size: 44px; }
+/*    margin: 36px 0;*/
+
+
+h4 {
+    font-size: 18px;
+    color: #364354;
+    font-weight: 700;
+    line-height: 24px;
+}
+.top-bar {
+    background-color: #fff;
+    height: 60px;
+    margin-top: 10px;
+}
+.top-bar ul { background-color: transparent }
+.top-bar .logo-header {
+    background-color: none;
+    display: inline-block;
+    background-image: url("../images/sakurity-logo.png");
+    width: 120px;
+    height: 38px;
+    margin-top: 4px;
+}
+@media all and (-webkit-min-device-pixel-ratio:1.5),all and (-o-min-device-pixel-ratio:3/2),all and (min--moz-device-pixel-ratio:1.5),all and (min-device-pixel-ratio:1.5) {
+    .top-bar .logo-header {
+        background-image: url("../images/sakurity-logo@2x.png");
+        -webkit-background-size: 120px 38px;
+        background-size: 120px 38px;
+    }
+}
+.top-bar .top-bar-section ul li { background-color: transparent }
+.top-bar .top-bar-section ul li.active a { color: #667486!important }
+.top-bar .top-bar-section ul li a {
+    background-color: transparent!important;
+    font-size: 16px;
+    font-weight: 700;
+    color: #e64464!important;
+}
+.top-bar .top-bar-section ul li a:hover { background-color: transparent }
+.welcome {
+    /*height: 558px;*/
+    width: 100%;
+    background-color: #4d5153;
+    background-image: -webkit-linear-gradient(90deg,#8fa1a5 0%,#4d5153 100%);
+    background-image: -moz-linear-gradient(90deg,#8fa1a5 0%,#4d5153 100%);
+    background-image: linear-gradient(0,#8fa1a5 0%,#4d5153 100%);
+    position: relative;
+    text-align: center;
+}
+.welcome h1,
+.welcome p { color: #fff }
+.welcome .welcome-pattern {
+    background-repeat: no-repeat;
+    background-position: center 0;
+    background-image: url("../images/sakurity-pattern-welcome.png");
+    width: 100%;
+    height: 100%;
+}
+@media all and (-webkit-min-device-pixel-ratio:1.5),all and (-o-min-device-pixel-ratio:3/2),all and (min--moz-device-pixel-ratio:1.5),all and (min-device-pixel-ratio:1.5) {
+    .welcome .welcome-pattern {
+        background-image: url("../images/sakurity-pattern-welcome@2x.png");
+        -webkit-background-size: 1646px 848px;
+        background-size: 1646px 848px;
+    }
+}
+.welcome .button {
+    color: #e64464;
+    background-color: #fff;
+    margin: 12px 0;
+}
+.welcome a {
+    font-weight: 400;
+    color: #fff;
+}
+.sakurity-logo-big {
+    background-image: url("../images/logo-wireframe.png");
+    width: 92px;
+    height: 130px;
+    display: inline-block;
+    margin: 36px 0;
+}
+@media all and (-webkit-min-device-pixel-ratio:1.5),all and (-o-min-device-pixel-ratio:3/2),all and (min--moz-device-pixel-ratio:1.5),all and (min-device-pixel-ratio:1.5) {
+    .sakurity-logo-big {
+        background-image: url("../images/logo-wireframe@2x.png");
+        -webkit-background-size: 92px 130px;
+        background-size: 92px 130px;
+    }
+}
+.service-icon {
+    background-position: center center;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 104px;
+    margin: 36px 0;
+}
+.service-icon.service-icon-billing { background-image: url("../images/sakurity-icon-billing.png") }
+@media all and (-webkit-min-device-pixel-ratio:1.5),all and (-o-min-device-pixel-ratio:3/2),all and (min--moz-device-pixel-ratio:1.5),all and (min-device-pixel-ratio:1.5) {
+    .service-icon.service-icon-billing {
+        background-image: url("../images/sakurity-icon-billing@2x.png");
+        -webkit-background-size: 102px 102px;
+        background-size: 102px 102px;
+    }
+}
+.service-icon.service-icon-ruby { background-image: url("../images/sakurity-icon-ruby.png") }
+@media all and (-webkit-min-device-pixel-ratio:1.5),all and (-o-min-device-pixel-ratio:3/2),all and (min--moz-device-pixel-ratio:1.5),all and (min-device-pixel-ratio:1.5) {
+    .service-icon.service-icon-ruby {
+        background-image: url("../images/sakurity-icon-ruby@2x.png");
+        -webkit-background-size: 104px 62px;
+        background-size: 104px 62px;
+    }
+}
+.service-icon.service-icon-auth { background-image: url("../images/sakurity-icon-auth.png") }
+@media all and (-webkit-min-device-pixel-ratio:1.5),all and (-o-min-device-pixel-ratio:3/2),all and (min--moz-device-pixel-ratio:1.5),all and (min-device-pixel-ratio:1.5) {
+    .service-icon.service-icon-auth {
+        background-image: url("../images/sakurity-icon-auth@2x.png");
+        -webkit-background-size: 104px 104px;
+        background-size: 104px 104px;
+    }
+}
+.service-icon.service-icon-bitcoin { background-image: url("../images/sakurity-icon-bitcoin.png") }
+@media all and (-webkit-min-device-pixel-ratio:1.5),all and (-o-min-device-pixel-ratio:3/2),all and (min--moz-device-pixel-ratio:1.5),all and (min-device-pixel-ratio:1.5) {
+    .service-icon.service-icon-bitcoin {
+        background-image: url("../images/sakurity-icon-bitcoin@2x.png");
+        -webkit-background-size: 104px 104px;
+        background-size: 104px 104px;
+    }
+}
+/*p { color: #8fa1a5 }*/
+p.small-text {
+    font-size: 14px;
+    line-height: 27px;
+}
+.content section { padding: 18px 0 50px }
+.content section.section-welcome .columns { padding-top: 18px }
+.content section.section-welcome .welcome-name {
+    color: #e64464;
+    font-weight: 700;
+}
+.content section.contact-us {
+    height: 460px;
+    padding-bottom: 0;
+}
+.content section.inverse { background-color: #f1f5f8 }
+.content section.inverse p { color: #8fa1a5 }
+.content section.inverse .section-pattern {
+    background-repeat: no-repeat;
+    background-position: center 260px;
+    background-image: url("../images/sakurity-pattern-footer.png");
+    width: 100%;
+    height: 100%;
+}
+@media all and (-webkit-min-device-pixel-ratio:1.5),all and (-o-min-device-pixel-ratio:3/2),all and (min--moz-device-pixel-ratio:1.5),all and (min-device-pixel-ratio:1.5) {
+    .content section.inverse .section-pattern {
+        background-image: url("../images/sakurity-pattern-footer@2x.png");
+        -webkit-background-size: 1140px 252px;
+        background-size: 1140px 252px;
+    }
+}
+.content section .clients { margin-top: 54px }
+.content section .clients .client {
+    width: 140px;
+    height: 90px;
+    background-position: center center;
+    background-repeat: no-repeat;
+    display: inline-block;
+}
+
+.content section .clients .client.client-airbnb {
+    background-image: url("../images/client-airbnb.png");
+    background-size: 122px 38px;
+}
+
+.content section .clients .client.client-mixpanel {
+    background-image: url("../images/client-mixpanel.png");
+    background-size: 122px 42px;
+}
+
+.content section .clients .client.client-coinbase {
+    background-image: url("../images/client-coinbase.png");
+    background-size: 122px 26px;
+}
+
+
+
+.content section .clients .client.client-airbnb {
+    background-image: url("../images/client-airbnb.png");
+    background-size: 122px 38px;
+}
+
+.content section .clients .client.client-duo {
+    background-image: url("../images/client-duo.png");
+    background-size: 122px 46px;
+}
+
+.content section .clients .client.client-crossover {
+    background-image: url("../images/client-crossover.png");
+    background-size: 122px 36px;
+}
+
+
+.content section .clients .client.client-yunbi {
+    background-image: url("../images/client-yunbi.png");
+    background-size: 122px 42px;
+}
+
+
+.content section .clients .client.client-paymium {
+    background-image: url("../images/client-paymium.png");
+    background-size: 122px 60px;
+}
+
+
+
+.content section .clients .client.client-cubits {
+    background-image: url("../images/client-cubits.png");
+    background-size: 122px 55px;
+}
+
+
+
+
+.content section .clients .client.client-podio { background-image: url("../images/client-podio.png") }
+@media all and (-webkit-min-device-pixel-ratio:1.5),all and (-o-min-device-pixel-ratio:3/2),all and (min--moz-device-pixel-ratio:1.5),all and (min-device-pixel-ratio:1.5) {
+    .content section .clients .client.client-podio {
+        background-image: url("../images/client-podio@2x.png");
+        background-size: 122px 42px;
+    }
+}
+.content section .clients .client.client-teespring { background-image: url("../images/client-teespring.png") }
+@media all and (-webkit-min-device-pixel-ratio:1.5),all and (-o-min-device-pixel-ratio:3/2),all and (min--moz-device-pixel-ratio:1.5),all and (min-device-pixel-ratio:1.5) {
+    .content section .clients .client.client-teespring {
+        background-image: url("../images/client-teespring@2x.png");
+        background-size: 140px 36px;
+    }
+}
+.content section .clients .client.client-tokbox { background-image: url("../images/client-tokbox.png") }
+@media all and (-webkit-min-device-pixel-ratio:1.5),all and (-o-min-device-pixel-ratio:3/2),all and (min--moz-device-pixel-ratio:1.5),all and (min-device-pixel-ratio:1.5) {
+    .content section .clients .client.client-tokbox {
+        background-image: url("../images/client-tokbox@2x.png");
+        background-size: 118px 32px;
+    }
+}
+.content section .clients .client.client-stripe { background-image: url("../images/client-stripe.png") }
+@media all and (-webkit-min-device-pixel-ratio:1.5),all and (-o-min-device-pixel-ratio:3/2),all and (min--moz-device-pixel-ratio:1.5),all and (min-device-pixel-ratio:1.5) {
+    .content section .clients .client.client-stripe {
+        background-image: url("../images/client-stripe@2x.png");
+        -webkit-background-size: 108px 46px;
+        background-size: 108px 46px;
+    }
+}
+.content section .clients .client.client-skrill { background-image: url("../images/client-skrill.png") }
+@media all and (-webkit-min-device-pixel-ratio:1.5),all and (-o-min-device-pixel-ratio:3/2),all and (min--moz-device-pixel-ratio:1.5),all and (min-device-pixel-ratio:1.5) {
+    .content section .clients .client.client-skrill {
+        background-image: url("../images/client-skrill@2x.png");
+        -webkit-background-size: 108px 38px;
+        background-size: 108px 38px;
+    }
+}
+.content section .clients .client.client-movile { background-image: url("../images/client-movile.png") }
+@media all and (-webkit-min-device-pixel-ratio:1.5),all and (-o-min-device-pixel-ratio:3/2),all and (min--moz-device-pixel-ratio:1.5),all and (min-device-pixel-ratio:1.5) {
+    .content section .clients .client.client-movile {
+        background-image: url("../images/client-movile@2x.png");
+        -webkit-background-size: 94px 82px;
+        background-size: 94px 82px;
+    }
+}
+.content section .clients .client.client-quizup { background-image: url("../images/client-quizup.png") }
+@media all and (-webkit-min-device-pixel-ratio:1.5),all and (-o-min-device-pixel-ratio:3/2),all and (min--moz-device-pixel-ratio:1.5),all and (min-device-pixel-ratio:1.5) {
+    .content section .clients .client.client-quizup {
+        background-image: url("../images/client-quizup@2x.png");
+        -webkit-background-size: 110px 32px;
+        background-size: 110px 32px;
+    }
+}
+.content section .clients .client.client-virool { background-image: url("../images/client-virool.png") }
+@media all and (-webkit-min-device-pixel-ratio:1.5),all and (-o-min-device-pixel-ratio:3/2),all and (min--moz-device-pixel-ratio:1.5),all and (min-device-pixel-ratio:1.5) {
+    .content section .clients .client.client-virool {
+        background-image: url("../images/client-virool@2x.png");
+        -webkit-background-size: 114px 30px;
+        background-size: 114px 30px;
+    }
+}
+.content section .clients .client.client-bitcoin_central { background-image: url("../images/client-bitcoin_central.png") }
+@media all and (-webkit-min-device-pixel-ratio:1.5),all and (-o-min-device-pixel-ratio:3/2),all and (min--moz-device-pixel-ratio:1.5),all and (min-device-pixel-ratio:1.5) {
+    .content section .clients .client.client-bitcoin_central {
+        background-image: url("../images/client-bitcoin_central@2x.png");
+        -webkit-background-size: 52px 68px;
+        background-size: 52px 68px;
+    }
+}
+.content section .clients .client.client-auth0 { background-image: url("../images/client-auth0.png") }
+@media all and (-webkit-min-device-pixel-ratio:1.5),all and (-o-min-device-pixel-ratio:3/2),all and (min--moz-device-pixel-ratio:1.5),all and (min-device-pixel-ratio:1.5) {
+    .content section .clients .client.client-auth0 {
+        background-image: url("../images/client-auth0@2x.png");
+        -webkit-background-size: 116px 42px;
+        background-size: 116px 42px;
+    }
+}
+.content section .clients .client.client-flxone { background-image: url("../images/client-flxone.png") }
+@media all and (-webkit-min-device-pixel-ratio:1.5),all and (-o-min-device-pixel-ratio:3/2),all and (min--moz-device-pixel-ratio:1.5),all and (min-device-pixel-ratio:1.5) {
+    .content section .clients .client.client-flxone {
+        background-image: url("../images/client-flxone@2x.png");
+        -webkit-background-size: 94px 34px;
+        background-size: 94px 34px;
+    }
+}
+.content section .clients .client.client-weebly { background-image: url("../images/client-weebly.png") }
+@media all and (-webkit-min-device-pixel-ratio:1.5),all and (-o-min-device-pixel-ratio:3/2),all and (min--moz-device-pixel-ratio:1.5),all and (min-device-pixel-ratio:1.5) {
+    .content section .clients .client.client-weebly {
+        background-image: url("../images/client-weebly@2x.png");
+        -webkit-background-size: 122px 44px;
+        background-size: 122px 44px;
+    }
+}
+.content section .clients .client.client-expressvpn { background-image: url("../images/client-expressvpn.png") }
+@media all and (-webkit-min-device-pixel-ratio:1.5),all and (-o-min-device-pixel-ratio:3/2),all and (min--moz-device-pixel-ratio:1.5),all and (min-device-pixel-ratio:1.5) {
+    .content section .clients .client.client-expressvpn {
+        background-image: url("../images/client-expressvpn@2x.png");
+        -webkit-background-size: 120px 36px;
+        background-size: 120px 36px;
+    }
+}
+.content section .clients .client.client-buffer { background-image: url("../images/client-buffer.png") }
+@media all and (-webkit-min-device-pixel-ratio:1.5),all and (-o-min-device-pixel-ratio:3/2),all and (min--moz-device-pixel-ratio:1.5),all and (min-device-pixel-ratio:1.5) {
+    .content section .clients .client.client-buffer {
+        background-image: url("../images/client-buffer@2x.png");
+        -webkit-background-size: 112px 22px;
+        background-size: 112px 22px;
+    }
+}
+.content section .clients .client.client-telerik { background-image: url("../images/client-telerik.png") }
+@media all and (-webkit-min-device-pixel-ratio:1.5),all and (-o-min-device-pixel-ratio:3/2),all and (min--moz-device-pixel-ratio:1.5),all and (min-device-pixel-ratio:1.5) {
+    .content section .clients .client.client-telerik {
+        background-image: url("../images/client-telerik@2x.png");
+        -webkit-background-size: 110px 24px;
+        background-size: 110px 24px;
+    }
+}
+.content section .client-say {
+    background-color: #f1f5f8;
+    padding: 20px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    height: 300px;
+}
+.content section .client-say p { color: #364354 }
+.content section .client-say .quote { color: #e64464 }
+.content section .client-people { padding: 36px 0 }
+.content section .client-people .client-people-name { margin-bottom: 18px }
+.content section .client-people .client-people-company {
+    color: #e64464;
+    font-weight: 700;
+}
+.blog-posts {
+    list-style: none;
+    font-size: 14px;
+
+}
+a {
+    color: #e64464;
+    font-weight: 700;
+}
+.button {
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+}
+.button.success { background-color: #e64464 }
+.button.success:hover { background-color: #c6204c }
+.button.large {
+    font-size: 24px;
+    height: 54px;
+    line-height: 16px;
+}
+.button.pull { margin: 54px 0 }
+footer {
+    background-color: #eaeef0;
+    font-size: 14px;
+    line-height: 27px;
+    padding: 54px 0;
+}
+footer h4 {
+    color: #bbbec0;
+    font-size: 16px;
+}
+footer a {
+    color: #8fa1a5;
+    font-size: 14px;
+}
+footer ul {
+    list-style: none;
+    margin: 0;
+}
+footer .copyright {
+    font-size: 13px;
+    color: #bbbec0;
+}
+footer .logo-monochrome {
+    background-image: url("../images/sakurity-logo-monochrome.png");
+    width: 120px;
+    height: 38px;
+    display: inline-block;
+    margin-bottom: 18px;
+}
+@media all and (-webkit-min-device-pixel-ratio:1.5),all and (-o-min-device-pixel-ratio:3/2),all and (min--moz-device-pixel-ratio:1.5),all and (min-device-pixel-ratio:1.5) {
+    footer .logo-monochrome {
+        background-image: url("../images/sakurity-logo-monochrome@2x.png");
+        -webkit-background-size: 120px 38px;
+        background-size: 120px 38px;
+    }
+}

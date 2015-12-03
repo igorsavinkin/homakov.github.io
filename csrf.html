@@ -1,17 +1,31 @@
-<table><tr><td valign=top width="400px">
-CSRF Tool new(<a href="http://homakov.blogspot.ru/2013/05/csrf-tool.html">How it works</a>). Also check out <a href="/replay.html">Replay tool</a><br>
+<head>
+<link href="stylesheets/main.css" rel="stylesheet" type="text/css">
+<link href="stylesheets/csrf.css" rel="stylesheet" type="text/css">
+<!--link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script-->
+</head>
+<body>
+<div class="welcome" height='150px'><h1 >CSRF Tool new</h1>
+	<h4><a href="http://homakov.blogspot.ru/2013/05/csrf-tool.html">How it works</a> <span style="font-size:0.7em">Also check out</span> <a href="/replay.html">Replay tool</a>
+	</h4>
+</div>
+<table><tr>
+	<td valign='top'>
+	<!--input onclick="switch_auto()" type="checkbox" id="c1"><label for="c1">Auto-submit</label-->	
+	<textarea rows="4" cols="120" id="curl" placeholder="enter raw curl to parse it into request with parameters">curl 'http://egorhomakov.com' --data 'x=1'</textarea>
 
-<input onclick="switch_auto()" type="checkbox" id="c1"><label for="c1">Auto-submit</label>
-<input onclick="switch_base()" type="checkbox" id="c2"><label for="c2">Base64 URL</label>
-<textarea rows="6" cols="100" id="curl">curl 'http://egorhomakov.com' --data 'x=1'</textarea>
-
-<div id="form"></div>
-<div id="tabs"></div>
-
-</td>
-<td>
-<iframe id="postme" seamless style="width:600px;height:500px;" src="data:,target iframe"></iframe>
-</td>
+	<div id="form" class="form"></div>
+	
+	</td>
+	<td valign='top'>
+	    <div id="tabs"></div>
+	</td>
+	</tr><tr>
+	<td><h4>Target iFrame</h4>
+		<iframe id="postme" name="postme"  seamless style="" src="data:,Target iFrame"></iframe>
+	</td>
 </tr></table>
 
 <script>
@@ -44,15 +58,36 @@ function dump_data(data){
 
 function submit_to(to){
   genform.target = to;
+  //alert(' genform.target ='+  genform.target);
   //genform.submit();
   //return false;
 }
-
+function flip_border(item){ 
+	console.dir(item.className);	
+	if (document.getElementsByClassName("checked").length>0){ 
+	    document.getElementsByClassName("checked")[0].removeAttribute("class");
+	} 	
+	item.className = 'checked';
+}
+function flip_submit_iframe(){
+  //var t = genform.target; 
+  if (genform.target == 'postme') { 
+      genform.target = '_top';
+      document.getElementById("iframe-input").removeAttribute("class");	  
+	}
+  else {  
+      genform.target = 'postme';
+      if (document.getElementsByClassName("checked").length>0){document.getElementsByClassName("checked")[0].removeAttribute("class");
+	  }	  
+	  document.getElementById("iframe-input").setAttribute("class", "checked");
+	  //window.scrollBy(0, 200);
+  }
+  console.log('genform.target ='+genform.target);
+  submit_to(genform.target);
+}
 function no_ref(){
-  /*
-  data: urls omit referers, i have a blogpost on this
-  */
-  location = 'data:text/html,'+get_html();
+   /*   data: urls omit referers, Egor has a blogpost on this: http://homakov.blogspot.ru/2012/04/playing-with-referer-origin-disquscom.html  */
+   window.location = 'data:text/html,'+get_html();
 }
 
 function switch_method(){
@@ -82,11 +117,11 @@ function save_tab(){
 }
 
 function load_tabs(){
-  var html = '';
+  var html = '<h4>Local Storage query configs</h4>';
   for(var name in localStorage){
-    html += "<a href='"+localStorage[name]+"'>"+name+"</a> <a href=\"javascript:delete localStorage['"+name+"'];load_tabs();\">[X]</a><br>"
+    html += "<a href='"+localStorage[name]+"'>"+name+"</a> <a href=\"javascript:delete localStorage['"+name+"'];load_tabs();\" class='btn1'>remove</a><br>";
   }
-  document.getElementById('tabs').innerHTML = html;
+  document.getElementById('tabs').innerHTML = html+'<br>';
 }
 
 function get_inputs(){
@@ -105,25 +140,29 @@ function generate_form(obj, visible){
     for(var k in pairs){
       if(k=='') continue;
       if(visible){
-        inputs += '<tr><td>'+esc(k)+' </td><td><input onchange="update_fields();" size=100 name="'+esc(k)+'" value="'+esc(pairs[k])+'"><a href="javascript:void(0)" onclick="this.parentNode.parentNode.remove();update_fields();">x</a></td></tr>';
-      }else{
+        inputs += '<tr><td>'+esc(k)+' </td><td><input onchange="update_fields();" size=80 name="'+esc(k)+'" value="'+esc(pairs[k])+'"> <a href="javascript:void(0)" onclick="this.parentNode.parentNode.remove();update_fields();" class="btn2">remove</a></td></tr>';
+      } else {
         inputs += esc(k)+' <input type="text" name="'+esc(k)+'" value="'+esc(pairs[k])+'"><br>';
       }
     }
     if(visible){
-      inputs = '<table>'+inputs+'</table>';
+      inputs = '<table>'+inputs+'<tr><td> </td><td><input id="new_name" placeholder="name"> = <input id="new_value" placeholder="value"> <a href="javascript:update_fields(1);" class="btn2">add a new parameter<a></td></tr></table>';
     }
   }
-  var outform = '<form id="genform" action="'+esc(obj.url)+'" method="'+obj.method+'">'+inputs+'<input type="submit"></form>';
+  var outform = '<form id="genform" action="'+esc(obj.url)+'" method="'+obj.method+'">'+inputs+'<br><input type="submit">&nbsp;<input type="submit" onclick="return no_ref();" value="No Referrer submission"></form>';
   
   if(visible){
-    var out = '<a id="cur_method" title="Switch?" href="javascript:switch_method()">'+obj.method+'</a> <input size=100 value="'+esc(obj.url)+'" onchange="switch_url(this.value);"><br>';
-    out += '<input type="submit" onclick="return submit_to(\'_blank\')" value="New window"><input type="submit" onclick="return submit_to(\'_top\')" value="This window"><input type="submit" onclick="return submit_to(\'postme\')" value="Iframe"><input type="submit" onclick="return no_ref();" value="No Referrer"> | <input type="submit" value="HTML" onclick="postme.location=(\'data:,\'+get_html())"> <input type="submit" onclick="save_tab()" value="Save">';
-    out += '<div><input id="new_name" placeholder="name"> = <input id="new_value" placeholder="value"> <a href="javascript:update_fields(1);">add<a></div>';
+    var out = '<a id="cur_method" title="Switch submit method?" href="javascript:switch_method()">'+obj.method+'</a> <input size=100 value="'+esc(obj.url)+'" onchange="switch_url(this.value);"><br>'+ outform;
+	var checked;
+    checked 	= base_enc ? 'checked' : '' ;
+    out += '<b><span style="color: #e64464;">Submission options:</span></b> <input type="submit" onclick="submit_to(\'_blank\');  flip_border(this); return false;" value="New window"><input type="submit"  onclick="submit_to(\'_top\'); flip_border(this); return false;" value="This window" class="checked"><input type="submit" onclick="submit_to(\'postme\'); flip_border(this); return false;" value="Iframe" id="iframe-input"> '  +
+	    '<hr> <input type="submit" value="Form\'s HTML" onclick="postme.location=(\'data:,\'+get_html())"> <input type="submit" onclick="save_tab()" value="Save in Local Storage">' + 
+		'<input onclick="switch_base()" type="checkbox" id="c2" ' + checked + ' ><label for="c2">Base64 URL</label>';
+   // out += '<div><input id="new_name" placeholder="name"> = <input id="new_value" placeholder="value"> <a href="javascript:update_fields(1);" class="btn2">add<a></div>';
 
-    out += '<div>'+outform+'</div>';
+    //out += outform;
 
-    out = '<div class="yelo">'+out+'</div>';
+    //out = '<div>'+out+'</div>';
     return out;
   }else{
     // hidden form
@@ -227,12 +266,3 @@ window.onload = load_hash;
 curl.onchange = parse_curl;
 onhashchange = load_hash;
 </script>
-
-<style>
-.yelo{
-  background-color: green;
-  background-color: green;
-}
-</style>
-
-
